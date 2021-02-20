@@ -3,10 +3,11 @@
 
 using namespace std;
 
-const int n = 64;
+enum { length_of_board = 8 };
+enum { width_of_board = 8 };
+enum { size_of_board = length_of_board * width_of_board };
 
-void Doska(char figures[n]);
-
+void Doska(char* chess_grid[size_of_board], int change_color);
 
 enum ConsoleColor {
     Black = 0,
@@ -33,105 +34,182 @@ void SetColor(int text, int background)
     SetConsoleTextAttribute(hStdOut, (WORD)((background << 4) | text));
 }
 
+char rook_black, knight_black, bishop_black, queen_black, king_black,
+        pawn_black; // figures black
+char rook_white, knight_white, bishop_white, queen_white, king_white,
+        pawn_white; // figures white
 
 int main()
 {
-    char buff;
-    char figures[n];
-    for (int i = 0; i < 63; i++) {
-        figures[i] = ' ';
+    int change_color = 0;
+    char* chess_grid[size_of_board]; // needed to move pieces around the board.
+    char empty = ' ';
+    for (int i = 0; i < size_of_board; i++) {
+        chess_grid[i] = &empty;
     }
+    rook_black = 'R';
+    knight_black = 'N';
+    bishop_black = 'B';
+    queen_black = 'Q';
+    king_black = 'K';
+    pawn_black = 'P';
+    rook_white = 'R';
+    knight_white = 'N';
+    bishop_white = 'B';
+    queen_white = 'Q';
+    king_white = 'K';
+    pawn_white = 'P';
+    // filling with black pawns
     for (int i = 8; i < 16; i++) {
-        figures[i] = 'P';
+        chess_grid[i] = &pawn_black;
     }
+    // filling with white pawns
     for (int i = 55; i > 47; i--) {
-        figures[i] = 'P';
+        chess_grid[i] = &pawn_white;
     }
-    figures[0] = 'R';
-    figures[1] = 'N';
-    figures[2] = 'B';
-    figures[3] = 'Q';
-    figures[4] = 'K';
-    figures[5] = 'B';
-    figures[6] = 'N';
-    figures[7] = 'R';
-    figures[56] = 'R';
-    figures[57] = 'N';
-    figures[58] = 'B';
-    figures[59] = 'Q';
-    figures[60] = 'K';
-    figures[61] = 'B';
-    figures[62] = 'N';
-    figures[63] = 'R';
-    Doska(figures);
+    // filling with basic black chess pieces
+    chess_grid[0] = &rook_black;
+    chess_grid[1] = &knight_black;
+    chess_grid[2] = &bishop_black;
+    chess_grid[3] = &queen_black;
+    chess_grid[4] = &king_black;
+    chess_grid[5] = &bishop_black;
+    chess_grid[6] = &knight_black;
+    chess_grid[7] = &rook_black;
+    // filling with basic white chess pieces
+    chess_grid[56] = &rook_white;
+    chess_grid[57] = &knight_white;
+    chess_grid[58] = &bishop_white;
+    chess_grid[59] = &queen_white;
+    chess_grid[60] = &king_white;
+    chess_grid[61] = &bishop_white;
+    chess_grid[62] = &knight_white;
+    chess_grid[63] = &rook_white;
+    Doska(chess_grid, change_color);
     return 0;
 }
 
-void Doska(char figures[n])
+void Doska(char* chess_grid[size_of_board], int change_color)
 {
     system("cls");
     cout << "\n\n\n\n\n\n\t\t\t\t\t\t8 ";
     for (int i = 0; i < 8; i += 2) {
-        SetColor(Black, White);
-        cout << " " << figures[i] << " ";
-        SetColor(Black, DarkGray);
-        cout << " " << figures[i + 1] << " ";
+        if ((chess_grid[i] == &rook_white) || (chess_grid[i] == &knight_white)
+            || (chess_grid[i] == &bishop_white)
+            || (chess_grid[i] == &king_white) || (chess_grid[i] == &queen_white)
+            || (chess_grid[i] == &pawn_white)) {
+            change_color = White;
+        } else
+            change_color = Black;
+        SetColor(change_color, LightGray);
+        cout << " " << *chess_grid[i] << " ";
+        SetColor(change_color, DarkGray);
+        cout << " " << *chess_grid[i + 1] << " ";
     }
     SetColor(White, Black);
     cout << "\n\t\t\t\t\t\t7 ";
     for (int i = 8; i < 16; i += 2) {
-        SetColor(Black, DarkGray);
-        cout << " " << figures[i] << " ";
-        SetColor(Black, White);
-        cout << " " << figures[i + 1] << " ";
+        if ((chess_grid[i] == &rook_white) || (chess_grid[i] == &knight_white)
+            || (chess_grid[i] == &bishop_white)
+            || (chess_grid[i] == &king_white) || (chess_grid[i] == &queen_white)
+            || (chess_grid[i] == &pawn_white)) {
+            change_color = White;
+        } else
+            change_color = Black;
+        SetColor(change_color, DarkGray);
+        cout << " " << *chess_grid[i] << " ";
+        SetColor(change_color, LightGray);
+        cout << " " << *chess_grid[i + 1] << " ";
     }
     SetColor(White, Black);
     cout << "\n\t\t\t\t\t\t6 ";
     for (int i = 16; i < 24; i += 2) {
-        SetColor(Black, White);
-        cout << " " << figures[i] << " ";
-        SetColor(Black, DarkGray);
-        cout << " " << figures[i + 1] << " ";
+        if ((chess_grid[i] == &rook_white) || (chess_grid[i] == &knight_white)
+            || (chess_grid[i] == &bishop_white)
+            || (chess_grid[i] == &king_white) || (chess_grid[i] == &queen_white)
+            || (chess_grid[i] == &pawn_white)) {
+            change_color = White;
+        } else
+            change_color = Black;
+        SetColor(change_color, LightGray);
+        cout << " " << *chess_grid[i] << " ";
+        SetColor(change_color, DarkGray);
+        cout << " " << *chess_grid[i + 1] << " ";
     }
     SetColor(White, Black);
     cout << "\n\t\t\t\t\t\t5 ";
     for (int i = 24; i < 32; i += 2) {
-        SetColor(Black, DarkGray);
-        cout << " " << figures[i] << " ";
-        SetColor(Black, White);
-        cout << " " << figures[i + 1] << " ";
+        if ((chess_grid[i] == &rook_white) || (chess_grid[i] == &knight_white)
+            || (chess_grid[i] == &bishop_white)
+            || (chess_grid[i] == &king_white) || (chess_grid[i] == &queen_white)
+            || (chess_grid[i] == &pawn_white)) {
+            change_color = White;
+        } else
+            change_color = Black;
+        SetColor(change_color, DarkGray);
+        cout << " " << *chess_grid[i] << " ";
+        SetColor(change_color, LightGray);
+        cout << " " << *chess_grid[i + 1] << " ";
     }
     SetColor(White, Black);
     cout << "\n\t\t\t\t\t\t4 ";
     for (int i = 32; i < 40; i += 2) {
-        SetColor(Black, White);
-        cout << " " << figures[i] << " ";
-        SetColor(Black, DarkGray);
-        cout << " " << figures[i + 1] << " ";
+        if ((chess_grid[i] == &rook_white) || (chess_grid[i] == &knight_white)
+            || (chess_grid[i] == &bishop_white)
+            || (chess_grid[i] == &king_white) || (chess_grid[i] == &queen_white)
+            || (chess_grid[i] == &pawn_white)) {
+            change_color = White;
+        } else
+            change_color = Black;
+        SetColor(change_color, LightGray);
+        cout << " " << *chess_grid[i] << " ";
+        SetColor(change_color, DarkGray);
+        cout << " " << *chess_grid[i + 1] << " ";
     }
     SetColor(White, Black);
     cout << "\n\t\t\t\t\t\t3 ";
     for (int i = 40; i < 48; i += 2) {
-        SetColor(Black, DarkGray);
-        cout << " " << figures[i] << " ";
-        SetColor(Black, White);
-        cout << " " << figures[i + 1] << " ";
+        if ((chess_grid[i] == &rook_white) || (chess_grid[i] == &knight_white)
+            || (chess_grid[i] == &bishop_white)
+            || (chess_grid[i] == &king_white) || (chess_grid[i] == &queen_white)
+            || (chess_grid[i] == &pawn_white)) {
+            change_color = White;
+        } else
+            change_color = Black;
+        SetColor(change_color, DarkGray);
+        cout << " " << *chess_grid[i] << " ";
+        SetColor(change_color, LightGray);
+        cout << " " << *chess_grid[i + 1] << " ";
     }
     SetColor(White, Black);
     cout << "\n\t\t\t\t\t\t2 ";
     for (int i = 48; i < 56; i += 2) {
-        SetColor(DarkGray, White);
-        cout << " " << figures[i] << " ";
-        SetColor(LightGray, DarkGray);
-        cout << " " << figures[i + 1] << " ";
+        if ((chess_grid[i] == &rook_white) || (chess_grid[i] == &knight_white)
+            || (chess_grid[i] == &bishop_white)
+            || (chess_grid[i] == &king_white) || (chess_grid[i] == &queen_white)
+            || (chess_grid[i] == &pawn_white)) {
+            change_color = White;
+        } else
+            change_color = Black;
+        SetColor(change_color, LightGray);
+        cout << " " << *chess_grid[i] << " ";
+        SetColor(change_color, DarkGray);
+        cout << " " << *chess_grid[i + 1] << " ";
     }
     SetColor(White, Black);
     cout << "\n\t\t\t\t\t\t1 ";
     for (int i = 56; i < 63; i += 2) {
-        SetColor(LightGray, DarkGray);
-        cout << " " << figures[i] << " ";
-        SetColor(DarkGray, White);
-        cout << " " << figures[i + 1] << " ";
+        if ((chess_grid[i] == &rook_white) || (chess_grid[i] == &knight_white)
+            || (chess_grid[i] == &bishop_white)
+            || (chess_grid[i] == &king_white) || (chess_grid[i] == &queen_white)
+            || (chess_grid[i] == &pawn_white)) {
+            change_color = White;
+        } else
+            change_color = Black;
+        SetColor(change_color, DarkGray);
+        cout << " " << *chess_grid[i] << " ";
+        SetColor(change_color, LightGray);
+        cout << " " << *chess_grid[i + 1] << " ";
     }
     SetColor(White, Black);
     cout << "\n\t\t\t\t\t\t  ";
